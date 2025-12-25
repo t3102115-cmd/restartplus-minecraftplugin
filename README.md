@@ -1,4 +1,5 @@
 # restartplus-minecraftplugin
+# This plugin is for Paper created
 A Minecraft Server paper plugin that allows Admins to restart and stop the server, for a reason and in a specified time. 
 The restart and stop message are gonna be changable in version 1.1. 
 Syntax: "/restartplus {time} {reason}" to restart the server in ... seconds for the reason ... 
