@@ -1,0 +1,34 @@
+name: RestartPlus
+version: 1.0
+main: de.example.restartplus.RestartPlus
+api-version: 1.21
+
+commands:
+  restartplus:
+    description: Restart with countdown
+    usage: /restartplus <seconds> <reason>
+    permission: restartplus.use
+
+  stopplus:
+    description: Stop with countdown
+    usage: /stopplus <seconds> <reason>
+    permission: stopplus.use
+
+  cancelrestart:
+    description: Cancel restart
+    permission: restartplus.use
+
+  cancelstop:
+    description: Cancel stop
+    permission: stopplus.use
+
+permissions:
+  restartplus.use:
+    default: op
+  stopplus.use:
+    default: op
+  cancelrestart.use:
+    default: op
+  cancelstop.use:
+    default: op
+
