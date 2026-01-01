@@ -21,7 +21,7 @@ public class RestartPlus extends JavaPlugin {
         String reason = "";
 
         // restartplus {delay} {announce} {reason (optional)}
-        if (cmd.equals("restartplus")) {
+        if (cmd.equals("restartp")) {
             if (!sender.hasPermission("restartplus.restart")) {
                 sender.sendMessage(ChatColor.RED + "You do not have permission.");
                 return true;
@@ -91,7 +91,7 @@ public class RestartPlus extends JavaPlugin {
         }
 
         // stopplus {delay} {announce} {reason (optional)}
-        if (cmd.equals("stopplus")) {
+        if (cmd.equals("stopp")) {
             if (!sender.hasPermission("restartplus.stop")) {
                 sender.sendMessage(ChatColor.RED + "You do not have permission.");
                 return true;
@@ -205,3 +205,4 @@ public class RestartPlus extends JavaPlugin {
         return false;
     }
 }
+
