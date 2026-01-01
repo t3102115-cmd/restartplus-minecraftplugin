@@ -20,7 +20,7 @@ public class RestartPlus extends JavaPlugin {
         boolean hasReason = false;
         String reason = "";
 
-        // restartplus {delay} {reason (optional)}
+        // restartplus {delay} {announce} {reason (optional)}
         if (cmd.equals("restartplus")) {
             if (!sender.hasPermission("restartplus.restart")) {
                 sender.sendMessage(ChatColor.RED + "You do not have permission.");
@@ -90,7 +90,7 @@ public class RestartPlus extends JavaPlugin {
             return true;
         }
 
-        // stopplus {delay} {reason}
+        // stopplus {delay} {announce} {reason (optional)}
         if (cmd.equals("stopplus")) {
             if (!sender.hasPermission("restartplus.stop")) {
                 sender.sendMessage(ChatColor.RED + "You do not have permission.");
@@ -103,23 +103,43 @@ public class RestartPlus extends JavaPlugin {
             }
 
             if (args.length < 2) {
-                sender.sendMessage(ChatColor.RED + "Usage: /stopplus <seconds> <reason>");
+                sender.sendMessage(ChatColor.RED + "Usage: <delay (seconds)> <announce true|false> <reason (optional)>");
                 return true;
             }
 
             int time;
+            boolean announce = false;
             try {
                 time = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
                 sender.sendMessage(ChatColor.RED + "Time must be a number.");
                 return true;
             }
+            
+            if (args.length > 1) {
+                String announceInput = args[1].toLowerCase();
+                if (announceInput.equals("true")) {
+                    announce = true;
+                } else if (announceInput.equals("false")) {
+                    announce = false;
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Usage: <delay (seconds)> <announce true|false> <reason (optional)>");
+                    return true;
+                }
+            }
+            
+            hasReason = false;
+            reason = "";
+            if (args.length > 2) {
+                reason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                hasReason = true;
+            }
 
-            String reason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
-
-            Bukkit.broadcastMessage(ChatColor.RED + "⚠ Server Stop Scheduled");
-            Bukkit.broadcastMessage(ChatColor.YELLOW + "Reason: " + ChatColor.WHITE + reason);
-            Bukkit.broadcastMessage(ChatColor.GOLD + "Server stops in " + time + " seconds");
+            if (announce) {
+                Bukkit.broadcastMessage(ChatColor.RED + "⚠ Server Stop Scheduled");
+                if (hasReason) Bukkit.broadcastMessage(ChatColor.YELLOW + "Reason: " + ChatColor.WHITE + reason);
+                Bukkit.broadcastMessage(ChatColor.GOLD + "Server stops in " + time + " seconds");
+            }
 
             stopTask = new BukkitRunnable() {
                 int countdown = time;
@@ -185,4 +205,3 @@ public class RestartPlus extends JavaPlugin {
         return false;
     }
 }
-
