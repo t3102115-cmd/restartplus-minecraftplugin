@@ -23,7 +23,8 @@ The restart and stop message will be modifiable in 1.1
 ## Download
 - Github Releases
 - [Modrinth](https://modrinth.com/plugin/restartplus)
-- [CurseForge](https
+- [CurseForge](https://www.curseforge.com/minecraft/bukkit-plugins/restartplus)
+- [HangarPaperMC](https://hangar.papermc.io/Silvan1235689/RestartPlus)
 ## Building
 **1.** Download Maven
 
@@ -42,4 +43,5 @@ The restart and stop message will be modifiable in 1.1
 **11.** The compiled jar should be inside the `target` folder
 
 ## Helpers:
+[Bluscrn99](https://github.com/Bluscrn99)
 
