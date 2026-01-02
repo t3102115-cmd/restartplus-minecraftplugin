@@ -6,6 +6,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import java.util.Arrays;
 
 public class RestartPlus extends JavaPlugin {
 
@@ -16,9 +17,11 @@ public class RestartPlus extends JavaPlugin {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         String cmd = command.getName().toLowerCase();
+        boolean hasReason = false;
+        String reason = "";
 
-        // ---------------- RESTART ----------------
-        if (cmd.equals("restartplus")) {
+        // restartplus {delay} {announce} {reason (optional)}
+        if (cmd.equals("restartp")) {
             if (!sender.hasPermission("restartplus.restart")) {
                 sender.sendMessage(ChatColor.RED + "You do not have permission.");
                 return true;
@@ -30,31 +33,45 @@ public class RestartPlus extends JavaPlugin {
             }
 
             if (args.length < 2) {
-                sender.sendMessage(ChatColor.RED + "Usage: /restartplus <seconds> <reason>");
+                sender.sendMessage(ChatColor.RED + "Usage: <delay (seconds)> <announce true|false> <reason (optional)>");
                 return true;
             }
-
             int time;
+            boolean announce = false;
             try {
                 time = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
                 sender.sendMessage(ChatColor.RED + "Time must be a number.");
                 return true;
             }
-
-            String reason = String.join(" ", args).substring(args[0].length() + 1);
-
-            Bukkit.broadcastMessage(ChatColor.RED + "⚠ Server Restart Scheduled");
-            Bukkit.broadcastMessage(ChatColor.YELLOW + "Reason: " + ChatColor.WHITE + reason);
-            Bukkit.broadcastMessage(ChatColor.GOLD + "Restart in " + time + " seconds");
-
+            if (args.length > 1) {
+                String announceInput = args[1].toLowerCase();
+                if (announceInput.equals("true")) {
+                    announce = true;
+                } else if (announceInput.equals("false")) {
+                    announce = false;
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Usage: <delay (seconds)> <announce true|false> <reason (optional)>");
+                    return true;
+                }
+            }
+            
+            if (args.length > 2) {
+                reason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                hasReason = true;
+            }
+            if (announce) {
+                Bukkit.broadcastMessage(ChatColor.RED + "Server Restart Scheduled");
+                if (hasReason) Bukkit.broadcastMessage(ChatColor.YELLOW + "Reason: " + ChatColor.WHITE + reason);
+                Bukkit.broadcastMessage(ChatColor.GOLD + "Restarting in " + time + " seconds");
+            }
             restartTask = new BukkitRunnable() {
                 int countdown = time;
 
                 @Override
                 public void run() {
                     if (countdown <= 0) {
-                        Bukkit.broadcastMessage(ChatColor.RED + "Restarting server now!");
+                        Bukkit.broadcastMessage(ChatColor.RED + "Server restarting!");
                         Bukkit.spigot().restart();
                         cancel();
                         restartTask = null;
@@ -73,8 +90,8 @@ public class RestartPlus extends JavaPlugin {
             return true;
         }
 
-        // ---------------- STOP ----------------
-        if (cmd.equals("stopplus")) {
+        // stopplus {delay} {announce} {reason (optional)}
+        if (cmd.equals("stopp")) {
             if (!sender.hasPermission("restartplus.stop")) {
                 sender.sendMessage(ChatColor.RED + "You do not have permission.");
                 return true;
@@ -86,23 +103,43 @@ public class RestartPlus extends JavaPlugin {
             }
 
             if (args.length < 2) {
-                sender.sendMessage(ChatColor.RED + "Usage: /stopplus <seconds> <reason>");
+                sender.sendMessage(ChatColor.RED + "Usage: <delay (seconds)> <announce true|false> <reason (optional)>");
                 return true;
             }
 
             int time;
+            boolean announce = false;
             try {
                 time = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
                 sender.sendMessage(ChatColor.RED + "Time must be a number.");
                 return true;
             }
+            
+            if (args.length > 1) {
+                String announceInput = args[1].toLowerCase();
+                if (announceInput.equals("true")) {
+                    announce = true;
+                } else if (announceInput.equals("false")) {
+                    announce = false;
+                } else {
+                    sender.sendMessage(ChatColor.RED + "Usage: <delay (seconds)> <announce true|false> <reason (optional)>");
+                    return true;
+                }
+            }
+            
+            hasReason = false;
+            reason = "";
+            if (args.length > 2) {
+                reason = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                hasReason = true;
+            }
 
-            String reason = String.join(" ", args).substring(args[0].length() + 1);
-
-            Bukkit.broadcastMessage(ChatColor.RED + "⚠ Server Stop Scheduled");
-            Bukkit.broadcastMessage(ChatColor.YELLOW + "Reason: " + ChatColor.WHITE + reason);
-            Bukkit.broadcastMessage(ChatColor.GOLD + "Server stops in " + time + " seconds");
+            if (announce) {
+                Bukkit.broadcastMessage(ChatColor.RED + "⚠ Server Stop Scheduled");
+                if (hasReason) Bukkit.broadcastMessage(ChatColor.YELLOW + "Reason: " + ChatColor.WHITE + reason);
+                Bukkit.broadcastMessage(ChatColor.GOLD + "Server stops in " + time + " seconds");
+            }
 
             stopTask = new BukkitRunnable() {
                 int countdown = time;
@@ -129,7 +166,7 @@ public class RestartPlus extends JavaPlugin {
             return true;
         }
 
-        // ---------------- CANCEL RESTART ----------------
+        // cancelrestart
         if (cmd.equals("cancelrestart")) {
             if (!sender.hasPermission("restartplus.cancelrestart")) {
                 sender.sendMessage(ChatColor.RED + "You do not have permission.");
@@ -147,7 +184,7 @@ public class RestartPlus extends JavaPlugin {
             return true;
         }
 
-        // ---------------- CANCEL STOP ----------------
+        // cancelstop
         if (cmd.equals("cancelstop")) {
             if (!sender.hasPermission("restartplus.cancelstop")) {
                 sender.sendMessage(ChatColor.RED + "You do not have permission.");
@@ -168,3 +205,4 @@ public class RestartPlus extends JavaPlugin {
         return false;
     }
 }
+
