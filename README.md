@@ -23,6 +23,7 @@ The restart and stop message will be modifiable in 1.1
 ## Download
 - Github Releases
 - [Modrinth](https://modrinth.com/plugin/restartplus)
+- [CurseForge](https
 ## Building
 **1.** Download Maven
 
@@ -39,3 +40,6 @@ The restart and stop message will be modifiable in 1.1
 **10.** Find the folder "target" inside the repo
 
 **11.** The compiled jar should be inside the `target` folder
+
+## Helpers:
+
